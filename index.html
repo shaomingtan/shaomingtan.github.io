@@ -3,37 +3,34 @@
     <button id='start-button'>start</button>
     <button id='pause-button'>pause</button>
     <script>
-      function hasGetUserMedia() {
-        return !!(navigator.mediaDevices &&
-          navigator.mediaDevices.getUserMedia);
-      }
-
       function StreamAudiov() {
-        const aCtx = new AudioContext();
-        navigator.mediaDevices.getUserMedia({audio: true}).then(function (stream) {
-          const microphone = aCtx.createMediaStreamSource(stream);
-          microphone.connect(aCtx.destination);
-        })
+        window.AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (window.AudioContext) {
+          const aCtx = new AudioContext();
+          navigator.mediaDevices.getUserMedia({audio: true}).then(function (stream) {
+            const microphone = aCtx.createMediaStreamSource(stream);
+            microphone.connect(aCtx.destination);
+          })
 
-        // One-liner to resume playback when user interacted with the page.
-        document.querySelector('#start-button').addEventListener('click', function() {
-          aCtx.resume().then(() => {
-            console.log('Playback resumed successfully');
+          // One-liner to resume playback when user interacted with the page.
+          document.querySelector('#start-button').addEventListener('click', function() {
+            aCtx.resume().then(() => {
+              console.log('Playback resumed successfully');
+            });
           });
-        });
 
-        document.querySelector('#pause-button').addEventListener('click', function() {
-          aCtx.suspend().then(() => {
-            console.log('Playback suspended successfully');
-          });
-        });
+          document.querySelector('#pause-button').addEventListener('click', function() {
+            aCtx.suspend().then(() => {
+              console.log('Playback suspended successfully');
+            });
+          });          
+        } else {
+          alert('getUserMedia() is not supported by your browser');
+        }
+
       }
 
-      if (hasGetUserMedia()) {
-        StreamAudiov()
-      } else {
-        alert('getUserMedia() is not supported by your browser');
-      }
+      StreamAudiov()
     </script>
   </body>
 </html>
