@@ -1,0 +1,32 @@
+<html>
+  <body>
+    <button id='button'>start</button>
+    <script>
+      function hasGetUserMedia() {
+        return !!(navigator.mediaDevices &&
+          navigator.mediaDevices.getUserMedia);
+      }
+
+      function StreamAudiov() {
+        const aCtx = new AudioContext();
+        navigator.mediaDevices.getUserMedia({audio: true}).then(function (stream) {
+          const microphone = aCtx.createMediaStreamSource(stream);
+          microphone.connect(aCtx.destination);
+        })
+
+        // One-liner to resume playback when user interacted with the page.
+        document.querySelector('#button').addEventListener('click', function() {
+          aCtx.resume().then(() => {
+            console.log('Playback resumed successfully');
+          });
+        });
+      }
+
+      if (hasGetUserMedia()) {
+        StreamAudiov()
+      } else {
+        alert('getUserMedia() is not supported by your browser');
+      }
+    </script>
+  </body>
+</html>
