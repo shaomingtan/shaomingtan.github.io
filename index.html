@@ -1,6 +1,7 @@
 <html>
   <body>
-    <button id='button'>start</button>
+    <button id='start-button'>start</button>
+    <button id='pause-button'>pause</button>
     <script>
       function hasGetUserMedia() {
         return !!(navigator.mediaDevices &&
@@ -15,9 +16,15 @@
         })
 
         // One-liner to resume playback when user interacted with the page.
-        document.querySelector('#button').addEventListener('click', function() {
+        document.querySelector('#start-button').addEventListener('click', function() {
           aCtx.resume().then(() => {
             console.log('Playback resumed successfully');
+          });
+        });
+
+        document.querySelector('#pause-button').addEventListener('click', function() {
+          aCtx.suspend().then(() => {
+            console.log('Playback suspended successfully');
           });
         });
       }
